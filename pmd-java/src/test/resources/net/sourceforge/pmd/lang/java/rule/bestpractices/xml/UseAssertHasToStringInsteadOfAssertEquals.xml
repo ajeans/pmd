@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data
+        xmlns="http://pmd.sourceforge.net/rule-tests"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests http://pmd.sourceforge.net/rule-tests_1_0_0.xsd">
+
+    <test-code>
+        <description>Assertj - assert toString with isEqualTo</description>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>8</expected-linenumbers>
+        <code><![CDATA[
+import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions;
+
+class MyTests {
+  @Test
+  private void badTest() {
+    Assertions.assertThat("foo".toString())
+      .isEqualTo("foo");
+  }
+}
+        ]]></code>
+    </test-code>
+
+    <test-code>
+        <description>Assertj - assert toString with hasToString</description>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions;
+
+class MyTests {
+  @Test
+  private void badTest() {
+    Assertions.assertThat("foo")
+      .hasToString("foo");
+  }
+}
+        ]]></code>
+    </test-code>
+</test-data>

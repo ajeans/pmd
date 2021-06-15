@@ -1887,6 +1887,55 @@ public class MyTestCase extends TestCase {
         </example>
     </rule>
 
+    <!-- Sonar rule S5838 -->
+    <rule name="UseAssertHasToStringInsteadOfAssertEquals"
+          language="java"
+          since="6.36.0"
+          message="Prefer using Assertions.assertThat(xxx).hasToString(yyy)"
+          class="net.sourceforge.pmd.lang.rule.XPathRule"
+          typeResolution="true"
+          externalInfoUrl="${pmd.website.baseurl}/pmd_rules_java_bestpractices.html#useasserthastostringinsteadofassertequals">
+        <description>
+            Prefer using "Assertions.assertThat(xxx).hasToString(yyy)"
+            rather than "Assertions.assertThat(xxx.toString()).isEqualTo(yyy)"
+        </description>
+        <priority>3</priority>
+        <properties>
+            <property name="version" value="2.0"/>
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//ClassOrInterfaceBodyDeclaration
+        [Annotation//Name[
+            pmd-java:typeIs('org.junit.jupiter.api.Test') or pmd-java:typeIs('org.junit.jupiter.api.RepeatedTest')
+            or pmd-java:typeIs('org.junit.jupiter.api.TestFactory') or pmd-java:typeIs('org.junit.jupiter.api.TestTemplate')
+            or pmd-java:typeIs('org.junit.jupiter.params.ParameterizedTest')
+        ]]
+  /MethodDeclaration
+  (: a Junit 5 test method :)
+    //PrimaryExpression
+      /PrimaryPrefix[Name[ends-with(@Image, 'assertThat')]]
+        /following-sibling::*[1][self::PrimarySuffix//PrimaryExpression/PrimarySuffix[@Image='toString']]
+          /following-sibling::*[1][self::PrimarySuffix[@Image='isEqualTo']]
+]]>
+                </value>
+            </property>
+        </properties>
+        <example><![CDATA[
+import org.junit.jupiter.api.Test;
+import org.assertj.core.api.Assertions;
+
+class MyTests {
+  @Test
+  private void badTest() {
+    Assertions.assertThat(archiveDto.getFile().toString())
+      .isEqualTo("foo");
+  }
+}
+]]>
+        </example>
+    </rule>
+
     <rule name="UseCollectionIsEmpty"
           language="java"
           since="3.9"
